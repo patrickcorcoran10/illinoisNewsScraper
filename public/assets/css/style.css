@@ -1,0 +1,86 @@
+h6 {
+    text-shadow: 1px 1px 2px black, 0 0 25px black, 0 0 5px black;
+    font-family: Trebuchet MS, Helvetica, sans-serif;
+    font-size: 17px;
+}
+
+h5 {
+    text-shadow: 2px 2px 8px black;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: 60px;
+}
+
+h4 {
+  font-family: 'Times New Roman', Times, serif;
+  color: black;
+}
+
+#myModal {
+    border-radius: 0px;
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: whitesmoke;
+    /* background-color: #fefefe; */
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border-radius: 0px;
+    width: 80%; /* Could be more or less, depending on screen size */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+/* The Close Button */
+.close {
+  margin: 0;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  text-align: center;
+  font-weight: 50;
+  width: 28px;
+  height: 28px;
+  border-radius: 23px;
+  background-color: #00aeef;
+  color: white;
+  font-size: 15px;
+  opacity: 1;
+  z-index: 10;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+    /* color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold; */
+}
+
+.close:hover,
+.close:focus {
+    cursor: pointer;
+}
+
+.comments {
+    height: 110px;
+    /* overflow: auto; */
+    overflow-y:scroll;
+}
+
+#firstname {
+    width: 98%;
+    margin-left: 0 auto;
+}
+
+#comment {
+    width: 98%;
+    margin: 0 auto;
+}

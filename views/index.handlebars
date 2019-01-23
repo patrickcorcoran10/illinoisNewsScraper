@@ -1,0 +1,204 @@
+<!-- NavBar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="https://capitolfax.com/">
+    <img src="./assets/images/capfaxLogo" width="40" height="40" alt="">
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/drop">Drop</a>
+      </li>
+      <li class="nav-item">
+          <a href="/scrape" class="btn btn-primary scrape-btn">Scrape!</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+{{!-- Main Carousel Image --}}
+  <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img class="d-block w-100" src="./assets/images/generalAssemblyImage.jpg" alt="First slide">
+        <div class="carousel-caption d-none d-md-block">
+        <h5>Illinois Politic's Board</h5>
+        <h6>All the news that's fit to print about the political happenings in Illinois</h6>
+        </div>
+    </div><br>
+    </div>
+
+{{!-- DIV to create card for each article stored --}}
+
+<ul>
+  {{#each found}}
+<div class="card">
+  <img class="card-img-top" src="{{this.image}}" />
+  <h4 class="card-header"><span class="label">{{this.headline}}</span></h4>
+  <div class="card-body">
+    <p class="card-text"><span class="label"></span> {{this.summary}}</p>
+    <a href={{this.link}} target="_blank" class="btn btn-primary">Read Full Article</a>
+    <button id="myBtn" data-id={{this._id}} class="btn btn-primary chat-button">Chat!</button>
+    <button type="button" href="/delete" data-id={{this._id}} class="btn btn-primary delete-button">Delete</button>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+        <div class="modal-content">
+    
+   
+    <h4 id="modal-headline"></h4><span class="close">x
+    </span>
+    Have your say...
+    <div id="comments" class="card comments">
+    <ul id="commentList" class="commentList"></ul>
+    </div>
+    <form id="modal-form">
+      Name<br>
+      <input type="text" id="firstname" class="firstname" name="firstname"><br>
+      Comment:<br>
+
+      <textarea class="post" id="comment" name="comment" rows="3" columns="2"></textarea>
+      </form>
+    <button type="button" href="/submit" data-id={{this._id}} class="btn btn-primary submit-button">Submit</button>
+  </div>
+</div>
+  </div>
+<br>
+  {{/each}}
+  </div>
+</ul>
+
+
+
+<script>
+// Get the modal
+var modal = document.getElementById('myModal');
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal 
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+
+
+ $(".chat-button").click(function(event) {
+         var modal = document.getElementById('myModal');
+          modal.style.display = "block";
+          $(".commentList").empty();
+    event.preventDefault();
+        var chatId = $(this).attr("data-id");
+        $.ajax("/comments", {
+          type: "POST",
+          data: { chatId: chatId }
+    }).then(function (response) {
+              $('#modal-headline').html(response[0].headline);
+              $('#modal-headline').attr("value", response[0]._id);
+              var i;
+              for (i = 0; i < response[0].comments.length; i++) {
+                $(".commentList").append("<li>" + response[0].comments[i].name + ": " + response[0].comments[i].message +"</li>" )
+              };
+              var modal = document.getElementById('myModal');
+              modal.style.display = "block";
+              var objDiv = document.getElementById("comments");
+              objDiv.scrollTop = objDiv.scrollHeight;
+              console.log("Modal should now be appearing in browser");
+              console.log(response);
+    }).catch(function (error) {
+        console.log("Something's not working...")
+        console.log(error);
+    })});
+
+    $(".submit-button").click(function(event) {
+      event.preventDefault();
+      $.ajax("/post", {
+        type: "POST",
+        data: {
+          name: $("input[type=text][name=firstname]" ).val(),
+          message: $(".post").val(),
+          articleId: $("#modal-headline").attr("value"),
+          complete: function(){
+            $(".commentList").append("<li>" + $("#firstname").val() + ": " + $("#comment").val() + "</li>" );
+            $("#firstname").val('');
+            $("#comment").val('');   
+            var objDiv = document.getElementById("comments");
+            objDiv.scrollTop = objDiv.scrollHeight;           
+            }
+        }}).then(function (response) {
+          console.log(response);
+        }).catch(function (error) {
+          console.log(error);
+    })});
+
+   $(".delete-button").click(function(event) {
+        var thisId = $(this).attr("data-id");
+        $.ajax("/delete", {
+          type: "POST",
+          data: { thisId: thisId }
+        }).then(
+          setTimeout(function() {
+            location.reload();
+          }, .1000));
+        });
+
+    $.ajax("/", {
+      type: "GET",
+      data: found
+    }).then(
+      function() {
+        {{!-- location.reload(); --}}
+      }
+    );
+
+ $(".scrape-btn").click(function(event) {
+    event.preventDefault();
+    $.ajax("/scrape", {
+      type: "GET",
+      data: found
+    }).then(setTimeout(function() {
+      res.redirect('/');
+      }, .1000)); 
+}); 
+
+function getComments (event) {
+        console.log("Get Comments function triggered!");
+        $(".commentList").empty();
+        $.ajax("/updateComments", {
+        type: "GET",
+        data: {
+          articleId: $("#modal-headline").attr("value"),
+        }}).then(function (response) {
+              $('#modal-headline').html(response[0].headline);
+              $('#modal-headline').attr("value", response[0]._id);
+              var i;
+              for (i = 0; i < response[0].comments.length; i++) {
+                $(".commentList").append("<li>" + response[0].comments[i].name + ": " + response[0].comments[i].message +"</li>" )
+              };
+              var modal = document.getElementById('myModal');
+              modal.style.display = "block";
+          console.log(response);
+        }).catch(function (error) {
+          console.log(error);
+    })};
+</script>
