@@ -11,9 +11,9 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-var databaseUrl = "mongodb://ekorslin:Cubs2016!@tribune-shard-00-00-vxwmm.mongodb.net:27017,tribune-shard-00-01-vxwmm.mongodb.net:27017,tribune-shard-00-02-vxwmm.mongodb.net:27017/test?ssl=true&replicaSet=Tribune-shard-0&authSource=admin&retryWrites=true";
+var databaseUrl = "mongodb://localhost/newsApp";
 
-var collections = ["scrapedData", "comments"];
+var collections = ["News", "Note"];
 var db = mongojs(databaseUrl, collections);
 db.on("error", function(error) {
   console.log("Database Error:", error);
@@ -58,7 +58,7 @@ if (title &&  link) {
 
       app.post('/delete', function(req, res){
         console.log(JSON.stringify(req.body.thisId));
-        db.scrapedData.remove({"_id": db.ObjectId(req.body.thisId)},
+        db.News.remove({"_id": db.ObjectId(req.body.thisId)},
         function(err, ) {
           if(err){
             console.log(err);
@@ -70,7 +70,7 @@ if (title &&  link) {
         
         app.post("/comments", function(req, res){
           console.log("Chat ID: " + JSON.stringify(req.body.chatId));
-          db.scrapedData.aggregate([
+          db.News.aggregate([
             { $project: { _id: 1, headline: 1 } },
             { $match: { _id: db.ObjectId(req.body.chatId) } },
             { $addFields: { artId: { "$toString": "$_id" }}},
@@ -89,7 +89,7 @@ if (title &&  link) {
             
             app.post("/updateComments", function(req, res){
               console.log("Chat ID: " + JSON.stringify(req.body.chatId));
-              db.scrapedData.aggregate([
+              db.Note.aggregate([
                 { $project: { _id: 1, headline: 1 } },
                 { $match: { _id: db.ObjectId(req.body.chatId) } },
                 { $addFields: { artId: { "$toString": "$_id" }}},
@@ -108,10 +108,10 @@ if (title &&  link) {
 
           app.post("/post", function(req, res) {
             let { body } = req;
-            db.comments.insert({
+            db.Note.insert({
               articleId: body.articleId,
               name: body.name,
-              message: body.message
+              message: body.message,
             }),function(err, response) {
               if(err) {
                 console.log(err); 
@@ -120,11 +120,11 @@ if (title &&  link) {
                 res.send(response);
               }
             }}); 
-     
+       
 
 app.get("/drop", function(req, res) {
   // Remove a note using the objectID
-  db.scrapedData.drop(function(error, removed) {
+  db.News.drop(function(error, removed) {
       // Log any errors from mongojs
       if (error) {
         console.log(error);
