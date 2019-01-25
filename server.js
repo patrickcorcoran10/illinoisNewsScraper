@@ -3,25 +3,25 @@ var express = require("express");
 var cheerio = require("cheerio");
 var request = require("request");
 var mongojs = require("mongojs");
-var mongoose = require("mongoose")
+// var mongoose = require("mongoose")
 var exphbs = require("express-handlebars");
 var app = express();
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 app.use(express.static("public"));
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 var databaseUrl = "mongodb://localhost/newsApp";
 
-if (process.env.MONGODB_URI) {
-  mongoose.connect(process.env.MONGODB_URI)
-} else {
-  mongoose.connect(databaseUrl);
-}
+// if (process.env.MONGODB_URI) {
+//   mongoose.connect(process.env.MONGODB_URI)
+// } else {
+//   mongoose.connect(databaseUrl);
+// }
 
 var collections = ["News", "Note"];
-var db = mongoose.connection;
+var db = mongojs(databaseUrl, collections);
 db.on("error", function(error) {
   console.log("Database Error:", error);
 });
