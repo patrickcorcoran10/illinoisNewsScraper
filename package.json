@@ -1,21 +1,21 @@
 {
   "name": "scrape",
   "version": "1.0.0",
-  "description": "package.json folder for scrape homework",
+  "description": "package.json folder for Illinois Political Scraper",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ekorslin/scrape.git"
+    "url": "git+https://github.com/patrickcorcoran10/illinoisNewsScraper"
   },
   "author": "Eric Korslin",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ekorslin/scrape/issues"
+    "url": "https://github.com/patrickcorcoran10/illinoisNewsScraper/issues"
   },
-  "homepage": "https://github.com/ekorslin/scrape#readme",
+  "homepage": "https://github.com/patrickcorcoran10/illinoisNewsScraper#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
     "cheerio": "^1.0.0-rc.2",
