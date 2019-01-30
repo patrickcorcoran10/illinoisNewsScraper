@@ -9,10 +9,10 @@ var app = express();
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 app.use(express.static("public"));
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
-var databaseUrl = "mongodb://localhost/newsApp";
+var databaseUrl = "mongodb://heroku_2dc774zc:77op8t8kl1gosfmt38ulbm149a@ds111478.mlab.com:11478/heroku_2dc774zc";
 
 // if (process.env.MONGODB_URI) {
 //   mongoose.connect(process.env.MONGODB_URI)
@@ -147,7 +147,10 @@ app.get("/drop", function(req, res) {
     }
   });
 });
-
+// app.set('port', process.env.PORT || 3000)
+// app.listen(app.get('port'), function() {
+//   console.log( 'Node server is running on port ' + app.get( 'port' ));
+// });
 app.listen(process.env.PORT || 3000, function(){
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });
